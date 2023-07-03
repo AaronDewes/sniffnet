@@ -5,9 +5,7 @@ use crate::networking::types::host::Host;
 use crate::networking::types::search_parameters::SearchParameters;
 use crate::notifications::types::notifications::Notification;
 use crate::utils::types::web_page::WebPage;
-use crate::{
-    AppProtocol, ChartType, IpVersion, Language, ReportSortType, StyleType, TransProtocol,
-};
+use crate::{ChartType, IpVersion, Language, ReportSortType, StyleType, TransProtocol};
 
 #[derive(Debug, Clone)]
 /// Messages types that permit to react to application interactions/subscriptions
@@ -22,8 +20,10 @@ pub enum Message {
     IpVersionSelection(IpVersion),
     /// Select transport filter
     TransportProtocolSelection(TransProtocol),
-    /// Select application filter
-    AppProtocolSelection(AppProtocol),
+    /// Add transport ports to filter
+    AddPorts(Vec<u16>),
+    /// Remove transport ports from filter
+    RemovePorts(Vec<u16>),
     /// Select chart type to be displayed
     ChartSelection(ChartType),
     /// Select report type to be displayed

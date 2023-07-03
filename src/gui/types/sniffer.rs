@@ -126,7 +126,8 @@ impl Sniffer {
             Message::AdapterSelection(name) => self.set_adapter(&name),
             Message::IpVersionSelection(version) => self.filters.ip = version,
             Message::TransportProtocolSelection(protocol) => self.filters.transport = protocol,
-            Message::AppProtocolSelection(protocol) => self.filters.application = protocol,
+            Message::AddPorts(ports) => self.add_ports(&ports),
+            Message::RemovePorts(ports) => self.remove_ports(&ports),
             Message::ChartSelection(what_to_display) => {
                 self.traffic_chart.change_kind(what_to_display);
             }
@@ -496,6 +497,18 @@ impl Sniffer {
         }
         Command::none()
     }
+
+    fn add_ports(&mut self, ports: &Vec<u16>) {
+        for port in ports {
+            self.filters.ports.insert(*port);
+        }
+    }
+
+    fn remove_ports(&mut self, ports: &Vec<u16>) {
+        for port in ports {
+            self.filters.ports.remove(port);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -543,7 +556,7 @@ mod tests {
         sniffer.update(Message::IpVersionSelection(IpVersion::IPv4));
         assert_eq!(sniffer.filters.ip, IpVersion::IPv4);
         sniffer.update(Message::IpVersionSelection(IpVersion::Other));
-        assert_eq!(sniffer.filters.ip, IpVersion::Other);
+        assert_eq!(sniffer.filtersa.ip, IpVersion::Other);
     }
 
     #[test]
@@ -569,7 +582,7 @@ mod tests {
     }
 
     #[test]
-    fn test_correctly_update_application_protocol() {
+    fn test_correctly_update_ports_filter() {
         let mut sniffer = Sniffer::new(
             Arc::new(Mutex::new(0)),
             Arc::new(Mutex::new(InfoTraffic::new())),
@@ -579,15 +592,25 @@ mod tests {
             Arc::new(Mutex::new(Err(String::new()))),
         );
 
-        assert_eq!(sniffer.filters.application, AppProtocol::Other);
-        sniffer.update(Message::AppProtocolSelection(AppProtocol::HTTPS));
-        assert_eq!(sniffer.filters.application, AppProtocol::HTTPS);
-        sniffer.update(Message::AppProtocolSelection(AppProtocol::HTTP));
-        assert_eq!(sniffer.filters.application, AppProtocol::HTTP);
-        sniffer.update(Message::AppProtocolSelection(AppProtocol::HTTP));
-        assert_eq!(sniffer.filters.application, AppProtocol::HTTP);
-        sniffer.update(Message::AppProtocolSelection(AppProtocol::XMPP));
-        assert_eq!(sniffer.filters.application, AppProtocol::XMPP);
+        assert_eq!(sniffer.filters.ports, HashSet::new());
+        sniffer.update(Message::AddPorts(vec![]));
+        assert_eq!(sniffer.filters.ports, HashSet::new());
+        sniffer.update(Message::RemovePorts(vec![161, 162, 199]));
+        assert_eq!(sniffer.filters.ports, HashSet::new());
+        sniffer.update(Message::AddPorts(vec![161, 162, 199]));
+        assert_eq!(sniffer.filters.ports, HashSet::from([161, 162, 199]));
+        sniffer.update(Message::AddPorts(vec![80, 8080]));
+        assert_eq!(
+            sniffer.filters.ports,
+            HashSet::from([80, 161, 8080, 162, 199])
+        );
+        sniffer.update(Message::AddPorts(vec![80, 8080, 65535]));
+        assert_eq!(
+            sniffer.filters.ports,
+            HashSet::from([80, 161, 8080, 162, 199, 65535])
+        );
+        sniffer.update(Message::RemovePorts(vec![161, 162, 199, 808]));
+        assert_eq!(sniffer.filters.ports, HashSet::from([80, 8080, 65535]));
     }
 
     #[test]

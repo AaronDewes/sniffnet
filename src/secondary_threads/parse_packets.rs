@@ -34,7 +34,7 @@ pub fn parse_packets(
 
     let network_layer_filter = filters.ip;
     let transport_layer_filter = filters.transport;
-    let app_layer_filter = filters.application;
+    let ports_filter = &filters.ports;
 
     let mut port1 = 0;
     let mut port2 = 0;
@@ -122,8 +122,9 @@ pub fn parse_packets(
                             || network_layer_filter.eq(&network_protocol))
                             && (transport_layer_filter.eq(&TransProtocol::Other)
                                 || transport_layer_filter.eq(&transport_protocol))
-                            && (app_layer_filter.eq(&AppProtocol::Other)
-                                || app_layer_filter.eq(&application_protocol))
+                            && (ports_filter.is_empty()
+                                || ports_filter.contains(&port1)
+                                || ports_filter.contains(&port2))
                         {
                             new_info = modify_or_insert_in_map(
                                 info_traffic_mutex,

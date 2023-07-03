@@ -3,8 +3,8 @@
 //! It contains elements to select network adapter and traffic filters.
 
 use iced::widget::{
-    button, horizontal_space, vertical_space, Button, Column, Container, PickList, Row, Scrollable,
-    Text, Tooltip,
+    button, horizontal_space, vertical_space, Button, Column, Container, Row, Scrollable, Text,
+    Tooltip,
 };
 use iced::Length::FillPortion;
 use iced::{alignment, Alignment, Font, Length};
@@ -12,16 +12,16 @@ use iced_native::widget::tooltip::Position;
 use pcap::Device;
 
 use crate::gui::components::radio::{ip_version_radios, transport_protocol_radios};
-use crate::gui::styles::style_constants::{get_font, FONT_SIZE_SUBTITLE, FONT_SIZE_TITLE, ICONS};
+use crate::gui::styles::style_constants::{get_font, FONT_SIZE_TITLE, ICONS};
 use crate::gui::styles::types::element_type::ElementType;
 use crate::gui::styles::types::style_tuple::StyleTuple;
 use crate::gui::types::message::Message;
 use crate::gui::types::sniffer::Sniffer;
 use crate::translations::translations::{
-    address_translation, addresses_translation, all_translation, application_protocol_translation,
-    choose_adapters_translation, select_filters_translation, start_translation,
+    address_translation, addresses_translation, choose_adapters_translation,
+    select_filters_translation, start_translation,
 };
-use crate::{AppProtocol, Language, StyleType};
+use crate::{Language, StyleType};
 
 /// Computes the body of gui initial page
 pub fn initial_page(sniffer: &Sniffer) -> Container<Message> {
@@ -48,33 +48,34 @@ pub fn initial_page(sniffer: &Sniffer) -> Container<Message> {
         .push(button_start(sniffer.style, sniffer.language))
         .push(vertical_space(FillPortion(1)));
 
-    let app_active = if sniffer.filters.application.ne(&AppProtocol::Other) {
-        Some(sniffer.filters.application)
-    } else {
-        None
-    };
-    let picklist_app = PickList::new(
-        if app_active.is_some() {
-            &AppProtocol::ALL[..]
-        } else {
-            &AppProtocol::ALL[1..]
-        },
-        app_active,
-        Message::AppProtocolSelection,
-    )
-    .padding([3, 7])
-    .placeholder(all_translation(sniffer.language))
-    .font(font)
-    .style(StyleTuple(sniffer.style, ElementType::Standard));
+    // let app_active = if sniffer.filters.ports.ne(&AppProtocol::Other) {
+    //     Some(sniffer.filters.ports)
+    // } else {
+    //     None
+    // };
+    // let picklist_app = PickList::new(
+    //     if app_active.is_some() {
+    //         &AppProtocol::ALL[..]
+    //     } else {
+    //         &AppProtocol::ALL[1..]
+    //     },
+    //     app_active,
+    //     Message::AppProtocolSelection,
+    // )
+    // .padding([3, 7])
+    // .placeholder(all_translation(sniffer.language))
+    // .font(font)
+    // .style(StyleTuple(sniffer.style, ElementType::Standard));
     let col_app = Column::new()
-        .width(FillPortion(8))
-        .spacing(10)
-        .push(
-            Text::new(application_protocol_translation(sniffer.language))
-                .font(font)
-                .size(FONT_SIZE_SUBTITLE),
-        )
-        .push(picklist_app);
+        // .width(FillPortion(8))
+        // .spacing(10)
+        // .push(
+        //     Text::new(application_protocol_translation(sniffer.language))
+        //         .font(font)
+        //         .size(FONT_SIZE_SUBTITLE),
+        // )
+        // .push(picklist_app)
+        ;
 
     let filters = Column::new()
         .width(FillPortion(6))

@@ -1,6 +1,7 @@
 //! Module defining the `Filters` struct, which represents the possible filters applicable on network traffic.
 
-use crate::{AppProtocol, IpVersion, TransProtocol};
+use crate::{IpVersion, TransProtocol};
+use std::collections::HashSet;
 
 /// Possible filters applicable to network traffic
 #[derive(Clone)]
@@ -9,8 +10,8 @@ pub struct Filters {
     pub ip: IpVersion,
     /// Transport layer protocol
     pub transport: TransProtocol,
-    /// Application layer protocol
-    pub application: AppProtocol,
+    /// Transport port numbers
+    pub ports: HashSet<u16>,
 }
 
 impl Default for Filters {
@@ -18,7 +19,7 @@ impl Default for Filters {
         Self {
             ip: IpVersion::Other,
             transport: TransProtocol::Other,
-            application: AppProtocol::Other,
+            ports: HashSet::default(),
         }
     }
 }

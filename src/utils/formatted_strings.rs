@@ -8,7 +8,7 @@ use crate::networking::types::traffic_direction::TrafficDirection;
 use crate::translations::translations::{
     active_filters_translation, none_translation, open_report_translation,
 };
-use crate::{get_colors, AppProtocol, IpVersion, Language, StyleType, TransProtocol};
+use crate::{get_colors, IpVersion, Language, StyleType, TransProtocol};
 
 /// Application version number (to be displayed in gui footer)
 pub const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -29,7 +29,7 @@ pub fn get_percentage_string(observed: u128, filtered: u128) -> String {
 /// Computes the String representing the active filters
 pub fn get_active_filters_string(filters: &Filters, language: Language) -> String {
     if filters.ip.eq(&IpVersion::Other)
-        && filters.application.eq(&AppProtocol::Other)
+        && filters.ports.is_empty()
         && filters.transport.eq(&TransProtocol::Other)
     {
         format!(
@@ -45,8 +45,8 @@ pub fn get_active_filters_string(filters: &Filters, language: Language) -> Strin
         if filters.transport.ne(&TransProtocol::Other) {
             filters_string.push_str(&format!("{} ", filters.transport));
         }
-        if filters.application.ne(&AppProtocol::Other) {
-            filters_string.push_str(&format!("{} ", filters.application));
+        if !filters.ports.is_empty() {
+            filters_string.push_str(&format!("{:?} ", filters.ports));
         }
         format!(
             "{}:\n   {filters_string}",
