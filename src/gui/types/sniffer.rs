@@ -556,7 +556,7 @@ mod tests {
         sniffer.update(Message::IpVersionSelection(IpVersion::IPv4));
         assert_eq!(sniffer.filters.ip, IpVersion::IPv4);
         sniffer.update(Message::IpVersionSelection(IpVersion::Other));
-        assert_eq!(sniffer.filtersa.ip, IpVersion::Other);
+        assert_eq!(sniffer.filters.ip, IpVersion::Other);
     }
 
     #[test]

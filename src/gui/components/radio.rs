@@ -21,7 +21,7 @@ pub fn ip_version_radios(
     style: StyleType,
     language: Language,
 ) -> Column<'static, Message> {
-    let mut ret_val = Column::new().spacing(10).padding(0).push(
+    let mut ret_val = Column::new().spacing(5).padding(0).push(
         ip_version_translation(language)
             .font(font)
             .size(FONT_SIZE_SUBTITLE),
@@ -52,7 +52,7 @@ pub fn transport_protocol_radios(
     style: StyleType,
     language: Language,
 ) -> Column<'static, Message> {
-    let mut ret_val = Column::new().spacing(10).push(
+    let mut ret_val = Column::new().spacing(5).push(
         Text::new(transport_protocol_translation(language))
             .font(font)
             .size(FONT_SIZE_SUBTITLE),
