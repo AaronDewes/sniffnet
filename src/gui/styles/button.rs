@@ -120,6 +120,29 @@ impl button::StyleSheet for StyleTuple {
     }
 
     fn disabled(&self, style: &Self::Style) -> Appearance {
-        button::StyleSheet::active(self, style)
+        let colors = get_colors(self.0);
+        button::Appearance {
+            background: Some(Background::Color(mix_colors(
+                colors.primary,
+                colors.buttons,
+            ))),
+            border_radius: match self {
+                StyleTuple(
+                    _,
+                    ElementType::TabActive | ElementType::TabInactive | ElementType::Neutral,
+                ) => 0.0,
+                StyleTuple(_, ElementType::BorderedRound | ElementType::BorderedRoundSelected) => {
+                    12.0
+                }
+                StyleTuple(_, ElementType::Starred | ElementType::NotStarred) => 100.0,
+                _ => BORDER_BUTTON_RADIUS,
+            },
+            border_width: 0.0,
+            text_color: Color {
+                a: 0.5,
+                ..colors.text_body
+            },
+            ..button::Appearance::default()
+        }
     }
 }

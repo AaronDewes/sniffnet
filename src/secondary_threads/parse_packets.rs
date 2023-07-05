@@ -122,19 +122,22 @@ pub fn parse_packets(
                             || network_layer_filter.eq(&network_protocol))
                             && (transport_layer_filter.eq(&TransProtocol::Other)
                                 || transport_layer_filter.eq(&transport_protocol))
-                            && (ports_filter.is_empty()
-                                || ports_filter.contains(&port1)
-                                || ports_filter.contains(&port2))
                         {
-                            new_info = modify_or_insert_in_map(
-                                info_traffic_mutex,
-                                &key,
-                                device,
-                                (mac_address1, mac_address2),
-                                exchanged_bytes,
-                                application_protocol,
-                            );
-                            reported_packet = true;
+                            let lowest_port = *ports_filter.first().unwrap();
+                            let highest_port = *ports_filter.get(1).unwrap();
+                            if (port1 >= lowest_port && port1 <= highest_port)
+                                || (port2 >= lowest_port && port2 <= highest_port)
+                            {
+                                new_info = modify_or_insert_in_map(
+                                    info_traffic_mutex,
+                                    &key,
+                                    device,
+                                    (mac_address1, mac_address2),
+                                    exchanged_bytes,
+                                    application_protocol,
+                                );
+                                reported_packet = true;
+                            }
                         }
 
                         let mut info_traffic = info_traffic_mutex

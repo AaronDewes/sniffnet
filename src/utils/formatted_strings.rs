@@ -29,7 +29,7 @@ pub fn get_percentage_string(observed: u128, filtered: u128) -> String {
 /// Computes the String representing the active filters
 pub fn get_active_filters_string(filters: &Filters, language: Language) -> String {
     if filters.ip.eq(&IpVersion::Other)
-        && filters.ports.is_empty()
+        && filters.ports.eq(&[0, 65535])
         && filters.transport.eq(&TransProtocol::Other)
     {
         format!(
@@ -45,7 +45,7 @@ pub fn get_active_filters_string(filters: &Filters, language: Language) -> Strin
         if filters.transport.ne(&TransProtocol::Other) {
             filters_string.push_str(&format!("{} ", filters.transport));
         }
-        if !filters.ports.is_empty() {
+        if filters.ports.ne(&[0, 65535]) {
             filters_string.push_str(&format!("{:?} ", filters.ports));
         }
         format!(

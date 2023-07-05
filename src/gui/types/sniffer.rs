@@ -126,8 +126,7 @@ impl Sniffer {
             Message::AdapterSelection(name) => self.set_adapter(&name),
             Message::IpVersionSelection(version) => self.filters.ip = version,
             Message::TransportProtocolSelection(protocol) => self.filters.transport = protocol,
-            Message::AddPorts(ports) => self.add_ports(&ports),
-            Message::RemovePorts(ports) => self.remove_ports(&ports),
+            Message::PortsSelection(ports) => self.filters.ports = ports,
             Message::ChartSelection(what_to_display) => {
                 self.traffic_chart.change_kind(what_to_display);
             }
@@ -496,18 +495,6 @@ impl Sniffer {
             return self.update(Message::ShowModal(MyModal::ClearAll));
         }
         Command::none()
-    }
-
-    fn add_ports(&mut self, ports: &Vec<u16>) {
-        for port in ports {
-            self.filters.ports.insert(*port);
-        }
-    }
-
-    fn remove_ports(&mut self, ports: &Vec<u16>) {
-        for port in ports {
-            self.filters.ports.remove(port);
-        }
     }
 }
 

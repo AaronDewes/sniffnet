@@ -670,73 +670,29 @@ pub fn of_total_translation(language: Language, percentage: &str) -> String {
 //     })
 // }
 
-pub fn error_translation(language: Language, error: &str) -> Text<'static> {
-    Text::new(match language {
-        Language::EN => format!(
-            "An error occurred! \n\n\
-                                {error}"
-        ),
-        Language::IT => format!(
-            "Si è verificato un errore! \n\n\
-                                {error}"
-        ),
-        Language::FR => format!(
-            "Une erreur est survenue! \n\n\
-                                {error}"
-        ),
-        Language::ES => format!(
-            "¡Se ha producido un error! \n\n\
-                                {error}"
-        ),
-        Language::PL => format!(
-            "Wystąpił błąd! \n\n\
-                                {error}"
-        ),
-        Language::DE => format!(
-            "Es ist ein Fehler aufgetreten! \n\n\
-                                {error}"
-        ),
-        Language::UK => format!(
-            "Виступила помилка! \n\n\
-                                {error}"
-        ),
-        Language::ZH => format!(
-            "发生了一些错误! \n\n\
-                                {error}"
-        ),
-        Language::RO => format!(
-            "A apărut o eroare! \n\n\
-                                {error}"
-        ),
-        Language::KO => format!(
-            "오류가 발생하였습니다! \n\n\
-                                {error}"
-        ),
-        Language::TR => format!(
-            "Bir hata oluştu! \n\n\
-                                 {error}"
-        ),
-        Language::RU => format!(
-            "Произошла ошибка! \n\n\
-                                 {error}"
-        ),
-        Language::PT => format!(
-            "Ocorreu um erro! \n\n\
-                                {error}"
-        ),
-        Language::EL => format!(
-            "Κάποιο σφάλμα συνέβη! \n\n\
-                                {error}"
-        ),
-        Language::FA => format!(
-            "خطایی رخ داد! \n\n\
-                                {error}"
-        ),
-        Language::SV => format!(
-            "Ett fel inträffade! \n\n\
-                                {error}"
-        ),
-    })
+pub fn error_translation(language: Language, error: &str) -> String {
+    let mut ret_val = match language {
+        Language::EN => String::from("An error occurred!"),
+        Language::IT => String::from("Si è verificato un errore!"),
+        Language::FR => String::from("Une erreur est survenue!"),
+        Language::ES => String::from("¡Se ha producido un error!"),
+        Language::PL => String::from("Wystąpił błąd!"),
+        Language::DE => String::from("Es ist ein Fehler aufgetreten!"),
+        Language::UK => String::from("Виступила помилка!"),
+        Language::ZH => String::from("发生了一些错误!"),
+        Language::RO => String::from("A apărut o eroare!"),
+        Language::KO => String::from("오류가 발생하였습니다!"),
+        Language::TR => String::from("Bir hata oluştu!"),
+        Language::RU => String::from("Произошла ошибка!"),
+        Language::PT => String::from("Ocorreu um erro!"),
+        Language::EL => String::from("Κάποιο σφάλμα συνέβη!"),
+        Language::FA => String::from("خطایی رخ داد!"),
+        Language::SV => String::from("Ett fel inträffade!"),
+    };
+    if !error.is_empty() {
+        ret_val.push_str(&format!("\n\n{error}"));
+    }
+    ret_val
 }
 
 pub fn both_translation(language: Language) -> &'static str {

@@ -261,7 +261,7 @@ fn body_pcap_error(
     font: Font,
 ) -> Column<'static, Message> {
     // let err_string = pcap_error.clone().unwrap();
-    let error_text = error_translation(language, pcap_error)
+    let error_text = Text::new(error_translation(language, pcap_error))
         .horizontal_alignment(Horizontal::Center)
         .font(font);
 
